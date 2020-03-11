@@ -57,14 +57,15 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        node = self.storage[index]
-        if node is None:
-            node = LinkedPair(key,value)
+        if self.storage[index] is None:
+            self.storage[index] = LinkedPair(key,value)
         else:
-            prev = node
-            while node.next:
-                node = node.next
-            node.next = LinkedPair(key,value)
+            newnode = self.storage[index]
+            while newnode:
+                oldnode = newnode
+                newnode = oldnode.next
+            oldnode.next = LinkedPair(key,value)
+          
         
 
 
@@ -90,17 +91,15 @@ class HashTable:
         Fill this in.
         '''
         index = self._hash_mod(key)
-        print('index',index,self.storage[index])
-        if self.storage[index]:
-            while self.storage[index]:
-                print("ff",index,self.storage[index].key,key)
-                if self.storage[index].key == key:
-                    return self.storage[index].value
+        node = self.storage[index]
+        value = None
+        if node:
+            while node:
+                if node.key == key:
+                    value = node.value
+                    return value
                 else:
-                    self.storage[index] = self.storage[index].next
-            return None
-        else:
-            return None
+                    node = node.next
         
 
     def resize(self):
@@ -111,15 +110,19 @@ class HashTable:
         Fill this in.
         '''
         old_capacity = self.capacity
-        old_storage = self.storage.copy()
+        old_storage = self.storage
         self.capacity = old_capacity * 2
         self.storage = [None] * self.capacity
-        for i in range(old_capacity):
-            print('cont',i)
-            while old_storage[i]:
-                print('p',i,old_storage[i].key,old_storage[i].value)
-                self.insert(old_storage[i].key,old_storage[i].value)
-                old_storage[i] = old_storage[i].next
+        for item in old_storage:
+            if item is None:
+                pass
+            else:
+                newnode = item
+                while newnode:
+                    self.insert(newnode.key,newnode.value)
+                    oldnode = newnode
+                    newnode = oldnode.next
+                
 
 
 
@@ -129,13 +132,33 @@ if __name__ == "__main__":
     ht.insert("line_1", "Tiny hash table")
     ht.insert("line_2", "Filled beyond capacity")
     ht.insert("line_3", "Linked list saves the day!")
+    ht.insert("key-0", "val-0")
+    ht.insert("key-1", "val-1")
+    ht.insert("key-2", "val-2")
+    ht.insert("key-3", "val-3")
+    ht.insert("key-4", "val-4")
+    ht.insert("key-5", "val-5")
+    ht.insert("key-6", "val-6")
+    ht.insert("key-7", "val-7")
+    ht.insert("key-8", "val-8")
+    ht.insert("key-9", "val-9")
 
     print("")
 
-    # Test storing beyond capacity
+    #Test storing beyond capacity
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+    print(ht.retrieve("key-0"))
+    print(ht.retrieve("key-1"))
+    print(ht.retrieve("key-2"))
+    print(ht.retrieve("key-3"))
+    print(ht.retrieve("key-4"))
+    print(ht.retrieve("key-5"))
+    print(ht.retrieve("key-6"))
+    print(ht.retrieve("key-7"))
+    print(ht.retrieve("key-8"))
+    print(ht.retrieve("key-9"))
     
     # Test resizing
     old_capacity = len(ht.storage)
@@ -148,5 +171,15 @@ if __name__ == "__main__":
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+    print(ht.retrieve("key-0"))
+    print(ht.retrieve("key-1"))
+    print(ht.retrieve("key-2"))
+    print(ht.retrieve("key-3"))
+    print(ht.retrieve("key-4"))
+    print(ht.retrieve("key-5"))
+    print(ht.retrieve("key-6"))
+    print(ht.retrieve("key-7"))
+    print(ht.retrieve("key-8"))
+    print(ht.retrieve("key-9"))
 
     print("")
